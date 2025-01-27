@@ -15,7 +15,7 @@ class BestSellerController extends Controller
     public function index(IndexBestSellersRequest $request)
     {
         // Generate a unique cache key based on the URL and query parameters
-        $cacheKey = 'api_results_' . md5($request->fullUrl() . '_' . config('services.nyt.api_key'));
+        $cacheKey = 'api_results_' . md5($request->fullUrl());
 
         // Cache for a configurable number of minutes (default 10)
         $ttl = now()->addMinutes((int)config('services.nyt.cache_minutes'));
@@ -28,7 +28,7 @@ class BestSellerController extends Controller
 
         // Fetch fresh data
         $response = app(NYTService::class)->getBestSellers(
-            apiKey: $request->validated('api-key'),
+            apiKey: $request->validated('apikey'),
             author: $request->validated('author'),
             title: $request->validated('title'),
             offset: $request->validated('offset'),

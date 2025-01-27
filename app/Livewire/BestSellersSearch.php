@@ -21,6 +21,9 @@ class BestSellersSearch extends Component
     #[Validate('sometimes|integer')]
     public $offset = 0;
 
+    #[Validate('required|string')]
+    public $apikey = '';
+
     public $numResults = [];
     public $results = [];
     public $errorMessage = '';
@@ -32,7 +35,7 @@ class BestSellersSearch extends Component
         try {
             // Make a GET request to your API endpoint
             $this->lastRequest = route('api.v1.best-sellers.index', array_filter([
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => $this->apikey,
                 'title' => $this->title,
                 'author' => $this->author,
                 'isbn' => $this->isbn,
@@ -46,12 +49,19 @@ class BestSellersSearch extends Component
                 $this->numResults = $response->json()['num_results'];
                 $this->results = $response->json()['results'];
                 $this->errorMessage = '';
-            } else {
+            } elseif(array_key_exists('error', $response->json())) {
+                $this->errorMessage = $response->getStatusCode().': '.$response->json()['error'].'. Details: '.$response->json()['details'];
+                $this->results = [];
+                $this->numResults = 0;
+            }
+            else
+            {
                 $this->errorMessage = $response->getStatusCode().': '.$response->json()['message'];
                 $this->results = [];
+                $this->numResults = 0;
             }
         } catch (\Exception $e) {
-            $this->errorMessage = 'An error occurred: ' . $e->getMessage();
+            $this->errorMessage = 'An error occurred at '.__LINE__ .': ' . $e->getMessage();
             $this->results = [];
         }
     }
@@ -114,6 +124,18 @@ class BestSellersSearch extends Component
                 wire:model="offset"
                 class="w-full border-gray-300 rounded-lg shadow-sm"
                 placeholder="Enter offset (e.g., 0)"
+            />
+        </div>
+
+        <!-- NYT API Key -->
+        <div>
+            <label for="apikey" class="block font-medium">NYT API Key</label>
+            <input
+                type="text"
+                id="apikey"
+                wire:model="apikey"
+                class="w-full border-gray-300 rounded-lg shadow-sm"
+                placeholder="Enter API Key (e.g. qYtvZBIBHyEE5.....)"
             />
         </div>
 

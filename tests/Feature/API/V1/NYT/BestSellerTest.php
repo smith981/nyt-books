@@ -21,7 +21,7 @@ class BestSellerTest extends TestCase
 
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'isbn' => '0871404427',
             ])
         )->assertStatus(200);
@@ -33,7 +33,7 @@ class BestSellerTest extends TestCase
 
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'title' => 'King Lear'
             ])
         )->assertStatus(200);
@@ -41,7 +41,7 @@ class BestSellerTest extends TestCase
         // We don't want to allow empty strings-- if empty they shouldn't send it
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'title' => ''
             ])
         )->assertStatus(422);
@@ -74,7 +74,7 @@ class BestSellerTest extends TestCase
         ]);
 
         $this->getJson(
-            route('api.v1.best-sellers.index', ['api-key' => 'invalid-api-key'])
+            route('api.v1.best-sellers.index', ['apikey' => 'invalid-apikey'])
         )->assertStatus(401);
     }
 
@@ -87,7 +87,7 @@ class BestSellerTest extends TestCase
 
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
             ])
         )->assertStatus(500);
     }
@@ -99,7 +99,7 @@ class BestSellerTest extends TestCase
         // Fails -- offset not multiple of 20
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'offset' => 1
             ])
         )->assertStatus(422);
@@ -107,7 +107,7 @@ class BestSellerTest extends TestCase
         // Fails -- empty string
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'offset' => ''
             ])
         )->assertStatus(422)
@@ -116,7 +116,7 @@ class BestSellerTest extends TestCase
         // Passes -- offset is 20
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'offset' => 20
             ])
         )->assertStatus(200);
@@ -124,7 +124,7 @@ class BestSellerTest extends TestCase
         // Passes -- offset is 40
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'offset' => 40
             ])
         )->assertStatus(200);
@@ -137,7 +137,7 @@ class BestSellerTest extends TestCase
         // Passes b/c ISBN is valid
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'isbn' => '0871404427',
             ])
         )->assertStatus(200);
@@ -145,7 +145,7 @@ class BestSellerTest extends TestCase
         // Fails b/c a negative ISBN is passed, which is invalid
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'isbn' => '-0871404427'
             ])
         )->assertStatus(422);
@@ -153,7 +153,7 @@ class BestSellerTest extends TestCase
         // Fails b/c ISBN is invalid
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'isbn' => 'foo'
             ])
         )->assertStatus(422);
@@ -166,28 +166,28 @@ class BestSellerTest extends TestCase
         // Not a legit name in any human culture
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'author' => 1245])
         )->assertStatus(422);
 
         // Can't be empty string
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'author' => ''])
         )->assertStatus(422);
 
         // "Normal" name
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'author' => 'Jack Davidson'])
         )->assertStatus(200);
 
         // Technically a legit name, but an extreme edge case demonstrating elaborate titles and diacritics
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'author' => 'His Róyal Holiness General Santa Anø King Lupé VIII'])
         )->assertStatus(200);
     }
@@ -198,7 +198,7 @@ class BestSellerTest extends TestCase
 
         $this->getJson(
             route('api.v1.best-sellers.index', [
-                'api-key' => config('services.nyt.api_key'),
+                'apikey' => 'fakeApiKey',
                 'isbn' => '0871404427',
                 'author' => 'Jack Davidson',
                 'title' => 'King Lear',
@@ -217,26 +217,26 @@ class BestSellerTest extends TestCase
         Cache::flush();
 
         $url = route('api.v1.best-sellers.index', [
-            'api-key' => config('services.nyt.api_key'),
+            'apikey' => 'fakeApiKey',
             'isbn' => '0871404427',
         ]);
 
         // Assert cache doesn't have the key yet
-        $this->assertTrue(Cache::missing('api_results_' . md5($url . '_' . config('services.nyt.api_key'))));
+        $this->assertTrue(Cache::missing('api_results_' . md5($url)));
 
         // First request (cache miss)
         $this->getJson($url)
             ->assertStatus(200);
 
         // Assert cache contains the key
-        $this->assertTrue(Cache::has('api_results_' . md5($url . '_' . config('services.nyt.api_key'))));
+        $this->assertTrue(Cache::has('api_results_' . md5($url)));
 
         // Second request (cache hit)
         $response = $this->getJson($url)
             ->assertStatus(200);
 
         // Ensure cached response is returned
-        $cachedData = Cache::get('api_results_' . md5($url . '_' . config('services.nyt.api_key')));
+        $cachedData = Cache::get('api_results_' . md5($url));
         $this->assertEquals($response->json(), $cachedData['body']);
     }
 

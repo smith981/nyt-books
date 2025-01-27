@@ -24,7 +24,7 @@ class IndexBestSellersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'api-key' => 'required|string|min:3',
+            'apikey' => 'required|string|min:3',
             'author' => ['sometimes', 'string', 'regex:/^[a-zA-Zà-ÿÀ-Ÿ\'’\- ]{1,100}$/'],
             'isbn' => ['sometimes', 'string', 'regex:/^(?:\d{9}[\dXx]|\d{13})$/'],
             'title' => 'sometimes|string',
@@ -40,7 +40,6 @@ class IndexBestSellersRequest extends FormRequest
     {
         return [
             'isbn.regex' => 'The ISBN must be a valid ISBN-10 or ISBN-13 format.',
-            'api-key.required' => 'API key is required. Please register for one and place it in your .env file under `NYT_API_KEY=[your key]` and then restart the server.',
         ];
     }
 }

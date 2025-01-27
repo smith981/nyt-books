@@ -24,7 +24,7 @@
 * Go to create a New App: https://developer.nytimes.com/my-apps/new-app
 * Enable the Books API. 
 * Create your app.
-* Place your API key in your .env file so that line reads`NYT_API_KEY=[your key]`
+* Save your key and use it when running tests requests from the form or your client app (cURL, PostMan, etc.)
 
 6. Run `./artisan key:generate` to set up encryption for your app (required)
 7. Run `npm install`
@@ -34,4 +34,67 @@
 11. Run `./artisan serve` to start the web interface
 12. Go to http://127.0.0.1:8000/web/best-seller-search to use the test form
 
-If you miss a step and see any errors about `missing pipe` or a missing API key, place the key in .env as shown above, restart the server, and try again. 
+### Example API Requests
+GET http://127.0.0.1:8000/api/1/nyt/best-sellers?apikey=[your_api_key]&isbn=0345545370
+
+```
+curl -X GET "http://127.0.0.1:8000/api/1/nyt/best-sellers?apikey=[your_api_key]&author=Sophia%20Amoruso" \
+-H "Accept: application/json"
+```
+
+GET http://127.0.0.1:8000/api/1/nyt/best-sellers?apikey=[your_api_key]&author=Sophia%20Amoruso
+
+```
+curl -X GET "http://127.0.0.1:8000/api/1/nyt/best-sellers?apikey=[your_api_key]&author=Sophia%20Amoruso" \
+     -H "Accept: application/json"
+```
+
+### Example API Response
+```json
+{
+  "status": "OK",
+  "copyright": "Copyright (c) 2025 The New York Times Company.  All Rights Reserved.",
+  "num_results": 1,
+  "results": [
+    {
+      "title": "\"MOST BLESSED OF THE PATRIARCHS\"",
+      "description": "A character study that attempts to make sense of Jefferson’s contradictions.",
+      "contributor": "by Annette Gordon-Reed and Peter S. Onuf",
+      "author": "Annette Gordon-Reed and Peter S Onuf",
+      "contributor_note": "",
+      "price": "0.00",
+      "age_group": "",
+      "publisher": "Liveright",
+      "isbns": [
+        {
+          "isbn10": "0871404427",
+          "isbn13": "9780871404428"
+        }
+      ],
+      "ranks_history": [
+        {
+          "primary_isbn10": "0871404427",
+          "primary_isbn13": "9780871404428",
+          "rank": 16,
+          "list_name": "Hardcover Nonfiction",
+          "display_name": "Hardcover Nonfiction",
+          "published_date": "2016-05-01",
+          "bestsellers_date": "2016-04-16",
+          "weeks_on_list": 1,
+          "rank_last_week": 0,
+          "asterisk": 1,
+          "dagger": 0
+        }
+      ],
+      "reviews": [
+        {
+          "book_review_link": "",
+          "first_chapter_link": "",
+          "sunday_review_link": "",
+          "article_chapter_link": ""
+        }
+      ]
+    }
+  ]
+}
+```
