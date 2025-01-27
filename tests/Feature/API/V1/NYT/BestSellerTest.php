@@ -29,7 +29,6 @@ class BestSellerTest extends TestCase
 
     public function test_get_best_seller_data_validates_title(): void
     {
-        $mockResponse = self::get_mock_successful_response();
         Http::fake();
 
         $this->getJson(
@@ -207,8 +206,13 @@ class BestSellerTest extends TestCase
         )->assertStatus(200);
     }
 
-    public function testMultipleRequestsUseCache()
+    public function test_multiple_requests_use_cache()
     {
+        $mockResponse = self::get_mock_successful_response();
+        Http::fake([
+            'https://api.nytimes.com/*' => Http::response($mockResponse, 200),
+        ]);
+
         // Clear the cache for a clean start
         Cache::flush();
 
