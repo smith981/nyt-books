@@ -218,21 +218,21 @@ class BestSellerTest extends TestCase
         ]);
 
         // Assert cache doesn't have the key yet
-        $this->assertTrue(Cache::missing('api_results_' . md5($url)));
+        $this->assertTrue(Cache::missing('api_results_' . md5($url . '_' . config('services.nyt.api_key'))));
 
         // First request (cache miss)
         $this->getJson($url)
             ->assertStatus(200);
 
         // Assert cache contains the key
-        $this->assertTrue(Cache::has('api_results_' . md5($url)));
+        $this->assertTrue(Cache::has('api_results_' . md5($url . '_' . config('services.nyt.api_key'))));
 
         // Second request (cache hit)
         $response = $this->getJson($url)
             ->assertStatus(200);
 
         // Ensure cached response is returned
-        $cachedData = Cache::get('api_results_' . md5($url));
+        $cachedData = Cache::get('api_results_' . md5($url . '_' . config('services.nyt.api_key')));
         $this->assertEquals($response->json(), $cachedData['body']);
     }
 
