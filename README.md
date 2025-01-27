@@ -11,8 +11,8 @@
 
 ### Requirements:
 * PHP 8.4
-* npm
-* Vite
+* npm (a recent version-- used for the test form)
+* Vite (also used for the test form)
 
 ### Getting Started
 1. `git clone https://github.com/smith981/nyt-books.git`
