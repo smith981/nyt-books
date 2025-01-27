@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS */
 [x-cloak] {
     display: none;
 }
