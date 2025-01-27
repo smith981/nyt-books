@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'nyt' => [
+        'app_id' => env('NYT_APP_ID'),
+        'api_key' => env('NYT_API_KEY'),
+        'api_url' => [
+            'v1' => [
+                'best-sellers' => env('NYT_API_URL_V1', 'https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json'),
+            ],
+        ],
+        'rate_limit' => env('NYT_RATE_LIMIT', 60),
+        'cache_minutes' => env('NYT_CACHE_MINUTES', 10),
+    ],
 ];

@@ -1,17 +1,8 @@
 <?php
 
+use App\Livewire\BestSellersSearch;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::prefix('web')->group(function () {
+    Route::get('/best-seller-search',BestSellersSearch::class)->name('best-seller-search');
 });
